@@ -4,7 +4,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const cellSize = 10; // Adjust the size of each cell
-const numRows = 40; // Number of rows
+const numRows = 50; // Number of rows
 const numCols = 60; // Number of columns
 
 canvas.width = cellSize * numCols;
@@ -15,13 +15,30 @@ const grid = Array.from({ length: numRows }, () =>
     Array.from({ length: numCols }, () => Math.random() > 0.7)
 );
 
-// Draw the grid
+// Draw the grid with rounded corners and pretty colors
 function drawGrid() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw cell colors
     for (let row = 0; row < numRows; row++) {
         for (let col = 0; col < numCols; col++) {
-            ctx.fillStyle = grid[row][col] ? 'black' : 'white';
-            ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+            const x = col * cellSize;
+            const y = row * cellSize;
+            const radius = 3; // Adjust the corner radius
+
+            ctx.fillStyle = grid[row][col] ? 'skyblue' : 'salmon';
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + cellSize - radius, y);
+            ctx.quadraticCurveTo(x + cellSize, y, x + cellSize, y + radius);
+            ctx.lineTo(x + cellSize, y + cellSize - radius);
+            ctx.quadraticCurveTo(x + cellSize, y + cellSize, x + cellSize - radius, y + cellSize);
+            ctx.lineTo(x + radius, y + cellSize);
+            ctx.quadraticCurveTo(x, y + cellSize, x, y + cellSize - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            ctx.fill();
         }
     }
 }
